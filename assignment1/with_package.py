@@ -38,8 +38,8 @@ class FlatSet(object):
         self.diameter = nx.diameter(self.xx)
         print("set average_clustering and diameter")
 
-        self.weights = zip(self.nn.edges, [e['weight'] for e in self.nn.edges.values()])
-        self.degrees = zip(self.nn.nodes, self.nn.degrees())
+        # self.weights = zip(self.nn.edges, [e['weight'] for e in self.nn.edges.values()])
+        # self.degrees = zip(self.nn.nodes, self.nn.degrees())
 
     def average_hopcount(self):
         pathlengths = []
@@ -61,34 +61,6 @@ class FlatSet(object):
         return max(e)
 
 
-def get_average_degree(G):
-    return 2 * len(G.edges) / len(G.nodes)
-
-
-def standard_deviation_degree(G):
-    sum = 0
-    for n in G.nodes:
-        degree = nx.degree(G, n)
-        sum += (degree - get_average_degree(G)) ** 2
-    return (sum / (len(G.nodes) - 1)) ** 0.5
-
-
-def average_hopcount(G):
-    pathlengths = []
-    for v in G.nodes():
-        spl = dict(nx.single_source_shortest_path_length(G, v))
-        # print(f"{v} {spl} ")
-        for p in spl:
-            pathlengths.append(spl[p])
-    return sum(pathlengths) / len(pathlengths)
-
-
-def largest_eignevalue(G):
-    L = nx.normalized_laplacian_matrix(G)
-    e = np.linalg.eigvals(L.A)
-    return max(e)
-
-
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi('Complex Networks')
@@ -106,27 +78,19 @@ if __name__ == '__main__':
     print("diameter: ", flat_set.diameter)
     print("largest eigenvalue:", flat_set.largest_eigenvalue)
 
-    #print([e['weight'] for e in flat_set.nn.edges.values()].count(1))
-    #print([e['weight'] for e in flat_set.nn.edges.values()].count(2))
-    #print([e['weight'] for e in flat_set.nn.edges.values()].count(3))
-    #print([e['weight'] for e in flat_set.nn.edges.values()].count(4))
-
-
+    # plot degree hist and weight hist
     ax2 = plt.subplot(211)
     ax2.hist(flat_set.nn.degrees(), 150)
     ax2.set_title("degree")
 
     ax1 = plt.subplot(212)
     ax1.set_xlim([-1, 420])
-    ax1.hist([int(e['weight']) for e in flat_set.nn.edges.values()], bins=int(max([e['weight'] for e in flat_set.nn.edges.values()])))
+    ax1.hist([int(e['weight']) for e in flat_set.nn.edges.values()],
+             bins=int(max([e['weight'] for e in flat_set.nn.edges.values()])))
     ax1.set_yscale('log')
     ax1.set_title("weight")
 
-
-
     plt.show()
-
-
 
 # degree_sequence = sorted([d for n, d in G.degree()], reverse=True)  # degree sequence
 # degreeCount = collections.Counter(degree_sequence)
@@ -160,4 +124,3 @@ if __name__ == '__main__':
 # print("diameter: ", nx.diameter(G))
 # print("largest eigenvalue:", largest_eignevalue(G))
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
