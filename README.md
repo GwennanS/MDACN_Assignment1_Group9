@@ -1,8 +1,8 @@
 # MDACN_Assignment1_Group9
 
 ## Tasks
-- [x] Task 1 => Git repo
-- [ ] Task 2 => Fully answer Q2
+- [X] Task 1 => Git repo
+- [X] Task 2 => Fully answer Q2
 - [ ] Task 3 => Fully answer Q3
 - [ ] Task 4 => Fully answer Q6
 - [ ] Task 5 => Fully answer Q8
