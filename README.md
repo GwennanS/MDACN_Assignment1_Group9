@@ -3,7 +3,7 @@
 ## Tasks
 - [X] Task 1 => Git repo
 - [X] Task 2 => Fully answer Q2
-- [ ] Task 3 => Fully answer Q3
+- [X] Task 3 => Fully answer Q3
 - [ ] Task 4 => Fully answer Q6
 - [ ] Task 5 => Fully answer Q8
 - [ ] Task 6 => Fully answer Q9
