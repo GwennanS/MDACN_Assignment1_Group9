@@ -40,6 +40,7 @@ class FlatSet(object):
         infected = [start]
         infected_len = []
         time_to = self.pp.observation_length()
+        time_sum = 0
         for current_t in self.pp.time:
             current_infected = infected.copy()
             for i in current_infected:
@@ -49,8 +50,9 @@ class FlatSet(object):
             infected_len.append(len(infected))
             if len(infected) >= self.N * 0.8 and time_to >= current_t:
                 time_to = current_t
+            time_sum = time_sum + time_to
 
-        return infected_len, time_to
+        return infected_len, time_to, time_sum
 
     def average_hopcount(self):
         pathlengths = []
@@ -143,11 +145,13 @@ if __name__ == '__main__':
 
     infect_num = []  # This contains I(t) for all nodes
     infect_num_rate = []  # this contains list of time to reach 0.8N for all nodes
+    infect_num_avg = []  # this contains the avg time to reach 0.8N for all nodes
     # for n in range(1, 3):
     for n in flat_set.pp.nodes:
-        list_n, time_n = flat_set.infected_end(n)
+        list_n, time_n, sum_n = flat_set.infected_end(n)
         infect_num.append(list_n)
         infect_num_rate.append((n, time_n))
+        infect_num_avg.append((n, sum_n / sum(list_n)))
         print(n)
 
     min_time = min([len(item) for item in infect_num])  # this is so index always works
@@ -162,9 +166,18 @@ if __name__ == '__main__':
         infect_num_expect_min.append(mean - var)
         infect_num_expect_plus.append(mean + var)
 
-    infect_num_rate = sorted(infect_num_rate, key=lambda x: x[1])
+    # this is R' rank
+    infect_num_avg = sorted(infect_num_avg, key=lambda x: x[1])
+    ranking_avg = [None] * flat_set.N
+    rank = 0
+    for tuple_avg in infect_num_avg:
+        ranking_avg[rank] = tuple_avg[0]
+        rank = rank + 1
+    print(infect_num_avg)
+    print("ranking_avg: ", ranking_avg)
 
     # this is R rank
+    infect_num_rate = sorted(infect_num_rate, key=lambda x: x[1])
     ranking_infect = [None] * flat_set.N
     rank = 0
     for tuple_rate in infect_num_rate:
@@ -177,32 +190,33 @@ if __name__ == '__main__':
     ranking_degree = [None] * flat_set.N
     rank = 0
     degree_sort = sorted(flat_set.degrees, key=lambda x: -x[1])
-    print(degree_sort)
     for tuple_degree in degree_sort:
         ranking_degree[rank] = tuple_degree[0]
         rank = rank + 1
+    print(degree_sort)
     print("ranking_degree: ", ranking_degree)
 
     # this is S rank
     ranking_strenght = [None] * flat_set.N
     rank = 0
     strenght = sorted(flat_set.strenght, key=lambda x: -x[1])
-    print(strenght)
     for tuple_rate in strenght:
         ranking_strenght[rank] = tuple_rate[0]
         rank = rank + 1
+    print(strenght)
     print("ranking_strenght: ", ranking_strenght)
 
     # uncomment this to plot centrality metric
     centrality_metric = []
     for f in np.linspace(0.05, 0.5, 10):
         size_f = int(f * flat_set.N)
-        degF = len(set(ranking_infect[0:size_f]).intersection(set(ranking_degree[0:size_f]))) / size_f
-        strF = len(set(ranking_infect[0:size_f]).intersection(set(ranking_strenght[0:size_f]))) / size_f
-        centrality_metric.append((degF, strF))
+        degF = len(set(ranking_avg[0:size_f]).intersection(set(ranking_degree[0:size_f]))) / size_f
+        strF = len(set(ranking_avg[0:size_f]).intersection(set(ranking_strenght[0:size_f]))) / size_f
+        rF = len(set(ranking_avg[0:size_f]).intersection(set(ranking_infect[0:size_f]))) / size_f
+        centrality_metric.append((degF, strF, rF))
 
-    p1, p2 = plt.plot(centrality_metric)
-    plt.legend([p1, p2], ["deg", "str"])
+    p1, p2, p3 = plt.plot(centrality_metric)
+    plt.legend([p1, p2, p3], ["D", "S", "R"])
     plt.title("centrality_metric")
 
     # uncomment this to plot infection rate E[I(t)]
