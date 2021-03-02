@@ -8,8 +8,8 @@
 - [X] Task 5 => Fully answer Q8
 - [X] Task 6 => Fully answer Q9
 - [X] Task 7 => Fully answer Q10
-- [ ] Task 8 => Fix implementation for Q10
-- [ ] Task 9 => Fix implementation for Q11
+- [X] Task 8 => Fix implementation for Q10
+- [X] Task 9 => Fix implementation for Q11
 - [ ] Task 10 => Fully answer Q11
 - [ ] Task 11 => Research best metric and answer Q12 (__Stefan & Chakir__)
 - [ ] Task 12 => Understand Q13 and implement code for Q13 (__Chakir__)
