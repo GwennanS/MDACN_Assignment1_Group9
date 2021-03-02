@@ -202,14 +202,16 @@ if __name__ == '__main__':
         centrality_metric.append((degF, strF))
 
     p1, p2 = plt.plot(centrality_metric)
-    plt.legend([p1, p2], ["deg", "str"])
+    #plt.legend([p1, p2], ["deg", "str"])
     plt.title("centrality_metric")
 
-    # uncomment this to plot infection rate E[I(t)]
-    # plt.plot(range(0, len(infect_num_expect)), infect_num_expect, 'k', color='#3F7F4C')
-    # plt.fill_between(range(0, len(infect_num_expect)), infect_num_expect_min, infect_num_expect_plus,
-    #                 alpha=1, edgecolor='#3F7F4C', facecolor='#7EFF99',
-    #                 linewidth=0)
-    # plt.title("infect")
+    #uncomment this to plot infection rate E[I(t)]
+    plt.plot(range(0, len(infect_num_expect)), infect_num_expect, 'k', color='#3F7F4C')
+    plt.fill_between(range(0, len(infect_num_expect)), infect_num_expect_min, infect_num_expect_plus,
+                    alpha=1, edgecolor='#3F7F4C', facecolor='#7EFF99',
+                    linewidth=0)
+    plt.ylabel('avg num of infected nodes & error bar')
+    plt.xlabel('timestep')
+    plt.title("Average number of infected nodes & its error bar")
 
     plt.show()
