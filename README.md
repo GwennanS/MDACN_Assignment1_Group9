@@ -7,7 +7,7 @@
 - [X] Task 4 => Fully answer Q6
 - [X] Task 5 => Fully answer Q8
 - [X] Task 6 => Fully answer Q9
-- [ ] Task 7 => Fully answer Q10
+- [X] Task 7 => Fully answer Q10
 - [ ] Task 8 => Fix implementation for Q10
 - [ ] Task 9 => Fix implementation for Q11
 - [ ] Task 10 => Fully answer Q11
