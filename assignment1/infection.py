@@ -50,7 +50,15 @@ class FlatSet(object):
             infected_len.append(len(infected))
             if len(infected) >= self.N * 0.8 and time_to >= current_t:
                 time_to = current_t
-            time_sum = time_sum + time_to
+            if len(infected) < self.N * 0.8:
+                time_sum = time_sum + current_t * (len(infected) - len(current_infected))
+
+        if time_to == self.pp.observation_length():
+            time_sum = self.pp.observation_length()
+        else:
+            print(time_sum)
+            time_sum = time_sum / self.N * 0.8
+            print(time_sum)
 
         return infected_len, time_to, time_sum
 
@@ -151,7 +159,7 @@ if __name__ == '__main__':
         list_n, time_n, sum_n = flat_set.infected_end(n)
         infect_num.append(list_n)
         infect_num_rate.append((n, time_n))
-        infect_num_avg.append((n, sum_n / sum(list_n)))
+        infect_num_avg.append((n, sum_n))
         print(n)
 
     min_time = min([len(item) for item in infect_num])  # this is so index always works
