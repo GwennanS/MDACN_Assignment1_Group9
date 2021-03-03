@@ -50,6 +50,9 @@ class FlatSet(object):
                 if i in self.pp.sources[current_t]:
                     more = [e[1] for e in self.pp.sources[current_t][i]]
                     infected.extend(x for x in more if x not in infected)
+                if i in self.pp.targets[current_t]:
+                    more = [e[0] for e in self.pp.targets[current_t][i]]
+                    infected.extend(x for x in more if x not in infected)
             infected_len.append(len(infected))
             if len(infected) >= self.N * 0.8 and time_to >= current_t:
                 time_to = current_t
