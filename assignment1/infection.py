@@ -56,9 +56,7 @@ class FlatSet(object):
         if time_to == self.pp.observation_length():
             time_sum = self.pp.observation_length()
         else:
-            print(time_sum)
             time_sum = time_sum / self.N * 0.8
-            print(time_sum)
 
         return infected_len, time_to, time_sum
 
@@ -224,8 +222,13 @@ if __name__ == '__main__':
         centrality_metric.append((degF, strF, rF))
 
     p1, p2, p3 = plt.plot(centrality_metric)
-    plt.legend([p1, p2, p3], ["D", "S", "R"])
-    plt.title("centrality_metric")
+    plt.legend([p1, p2, p3], ["Degree", "Strength", "R"])
+    y = np.array(centrality_metric)
+    plt.xticks(np.arange(10), [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+    plt.grid(color='b', linestyle="-", linewidth=0.05)
+    plt.xlabel("f")
+    plt.ylabel("r(f)")
+    plt.title("Centrality features")
 
     # uncomment this to plot infection rate E[I(t)]
     # plt.plot(range(0, len(infect_num_expect)), infect_num_expect, 'k', color='#3F7F4C')
