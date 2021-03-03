@@ -234,7 +234,13 @@ if __name__ == '__main__':
         centrality_metric.append((degF, strF, clsF, btwF))
 
     p1, p2, p3, p4 = plt.plot(centrality_metric)
-    plt.legend([p1, p2, p3, p4], ["deg", "str", "cls", "btw"])
+    plt.legend([p1, p2, p3, p4], ["Degree", "Strength", "Closeness", "Betweenness"])
+    y = np.array(centrality_metric)
+    plt.xticks(np.arange(10), [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+    plt.yticks(np.arange(y.min(), y.max(), 0.05))
+    plt.grid(color='b', linestyle="-", linewidth=0.05)
+    plt.xlabel("f")
+    plt.ylabel("r(f)")
     plt.title("centrality_metric")
 
     #uncomment this to plot infection rate E[I(t)]
