@@ -81,14 +81,18 @@ if __name__ == '__main__':
     # plot degree hist and weight hist
     ax2 = plt.subplot(211)
     ax2.hist(flat_set.nn.degrees(), 150)
-    ax2.set_title("degree")
+    ax2.set_title("Degree distribution")
+    ax2.set_xlabel('degree')
+    ax2.set_ylabel('num of nodes')
 
     ax1 = plt.subplot(212)
     ax1.set_xlim([-1, 420])
     ax1.hist([int(e['weight']) for e in flat_set.nn.edges.values()],
              bins=int(max([e['weight'] for e in flat_set.nn.edges.values()])))
     ax1.set_yscale('log')
-    ax1.set_title("weight")
+    ax1.set_xlabel('weight')
+    ax1.set_ylabel('num of links')
+    ax1.set_title("Link weights distribution")
 
     plt.show()
 
