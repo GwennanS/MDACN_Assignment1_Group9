@@ -251,11 +251,10 @@ if __name__ == '__main__':
         centrality_metric.append((degF, strF))
 
     p1, p2 = plt.plot(centrality_metric)
-    plt.legend([p1, p2], ["deg", "str"])
-    plt.title("centrality_metric")
+    plt.legend([p1, p2], ["Degree", "Strength"])
+    plt.title("Centrality metrics")
 
-
-    #uncomment this for q12 - degree, strength, betweenness and closeness
+    # uncomment this for q12 - degree, strength, betweenness and closeness
     #     centrality_metric = []
     #     for f in np.linspace(0.05, 0.5, 10):
     #         size_f = int(f * flat_set.N)
