@@ -17,6 +17,9 @@ class FlatSet(object):
         self.nn = pathpy.Network.from_temporal_network(self.pp)
         print("set all package networks")
 
+        self.betweenness = self.betweenness(self.nn)
+        self.closeness = self.closeness(self.nn)
+
         self.N = self.nn.ncount()
         self.L = self.nn.ecount()
         self.average_degree = 2 * self.L / self.N
@@ -70,6 +73,13 @@ class FlatSet(object):
         L = nx.normalized_laplacian_matrix(self.xx)
         e = np.linalg.eigvals(L.A)
         return max(e)
+
+    def betweenness(self, nw):
+        return list(pathpy.algorithms.centralities.betweenness(nw).items())
+
+    def closeness(self, nw):
+        return list(pathpy.algorithms.centralities.closeness(nw).items())
+
 
 
 # def sample_paths_from_temporal_network_dag(tempnet, delta=1, max_subpath_length=None):
@@ -193,25 +203,47 @@ if __name__ == '__main__':
         rank = rank + 1
     print("ranking_strenght: ", ranking_strenght)
 
+
+    # this is closeness
+    ranking_closeness = [None] * flat_set.N
+    rank = 0
+    closeness = sorted(flat_set.closeness, key=lambda x: -x[1])
+    print(closeness)
+    for tuple_cls in closeness:
+        ranking_closeness[rank] = tuple_cls[0]
+        rank = rank + 1
+    print("ranking closeness", ranking_closeness)
+
+    ranking_betweenness = [None] * flat_set.N
+    rank = 0
+    betweenness = sorted(flat_set.betweenness, key=lambda x: -x[1])
+    print(betweenness)
+    for tuple_btw in betweenness:
+        ranking_betweenness[rank] = tuple_btw[0]
+        rank = rank + 1
+    print("ranking betweenness", ranking_betweenness)
+
     # uncomment this to plot centrality metric
     centrality_metric = []
     for f in np.linspace(0.05, 0.5, 10):
         size_f = int(f * flat_set.N)
         degF = len(set(ranking_infect[0:size_f]).intersection(set(ranking_degree[0:size_f]))) / size_f
         strF = len(set(ranking_infect[0:size_f]).intersection(set(ranking_strenght[0:size_f]))) / size_f
-        centrality_metric.append((degF, strF))
+        clsF = len(set(ranking_infect[0:size_f]).intersection(set(ranking_closeness[0:size_f]))) / size_f
+        btwF = len(set(ranking_infect[0:size_f]).intersection(set(ranking_betweenness[0:size_f]))) / size_f
+        centrality_metric.append((degF, strF, clsF, btwF))
 
-    p1, p2 = plt.plot(centrality_metric)
-    #plt.legend([p1, p2], ["deg", "str"])
+    p1, p2, p3, p4 = plt.plot(centrality_metric)
+    plt.legend([p1, p2, p3, p4], ["deg", "str", "cls", "btw"])
     plt.title("centrality_metric")
 
     #uncomment this to plot infection rate E[I(t)]
-    plt.plot(range(0, len(infect_num_expect)), infect_num_expect, 'k', color='#3F7F4C')
-    plt.fill_between(range(0, len(infect_num_expect)), infect_num_expect_min, infect_num_expect_plus,
-                    alpha=1, edgecolor='#3F7F4C', facecolor='#7EFF99',
-                    linewidth=0)
-    plt.ylabel('avg num of infected nodes & error bar')
-    plt.xlabel('timestep')
-    plt.title("Average number of infected nodes & its error bar")
+    # plt.plot(range(0, len(infect_num_expect)), infect_num_expect, 'k', color='#3F7F4C')
+    # plt.fill_between(range(0, len(infect_num_expect)), infect_num_expect_min, infect_num_expect_plus,
+    #                 alpha=1, edgecolor='#3F7F4C', facecolor='#7EFF99',
+    #                 linewidth=0)
+    # plt.ylabel('avg num of infected nodes & error bar')
+    # plt.xlabel('timestep')
+    # plt.title("Average number of infected nodes & its error bar")
 
     plt.show()
