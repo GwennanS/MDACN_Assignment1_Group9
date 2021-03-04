@@ -1,11 +1,14 @@
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
+import matplotlib.mlab as mlab
+import scipy
 import networkx as nx
 import collections
 import pathpy
 from pathpy.utils import Severity
 import random
+import pickle
 
 
 class FlatSet(object):
@@ -32,7 +35,27 @@ class FlatSet(object):
         self.average_clustering = nx.average_clustering(self.xx)
         self.diameter = nx.diameter(self.xx)
 
+        self.intervals = []
         print("set everything")
+
+    def edge_intervals(self):
+        for edgeval in self.nn.edges:
+            current_intervals = []
+            for edgeval_current in self.pp.tedges[::2]:
+                if edgeval[0] == edgeval_current[0] and edgeval[1] == edgeval_current[1]:
+                    current_intervals.append(edgeval_current[2])
+                    #print(edgeval_current)
+
+            #current_intervals.pop(0)  # do this to remove the edge itself, e.g. [a, a] is no interval
+            #print(current_intervals)
+
+            current_intervals.sort()
+            self.intervals.extend(list(np.diff(current_intervals)))
+            #for x, y in zip(current_intervals[0::], current_intervals[1::]):
+            #    self.intervals.append(y - x)
+        print(self.intervals)
+
+        #print("G len(intervals): " + str(len(self.intervals)))
 
     def infected_end(self, start):
         infected = [start]
@@ -90,90 +113,113 @@ if __name__ == '__main__':
 
     #compute probability density for G1
     ####################################################################
-    intervals_g1 = []
-    
-    for edgeval in G1.nn.edges:
-        current_intervals = []
-        for edgeval_current in G1.pp.tedges[::2]:
-            if edgeval[0] == edgeval_current[0] and edgeval[1] == edgeval_current[1]:
-                current_intervals.append(edgeval_current[2])
-        
-        current_intervals.pop(0) # do this to remove the edge itself, e.g. [a, a] is no interval
-        #print(current_intervals)
+    G1.edge_intervals()
 
-        for x, y in zip(current_intervals[0::], current_intervals[1::]): 
-            intervals_g1.append(y-x) 
-        #print(intervals)
-
-        print("G1 len(intervals): " + str(len(intervals_g1)))
+    # intervals_g1 = []
+    #
+    # for edgeval in G1.nn.edges:
+    #     current_intervals = []
+    #     for edgeval_current in G1.pp.tedges[::2]:
+    #         if edgeval[0] == edgeval_current[0] and edgeval[1] == edgeval_current[1]:
+    #             current_intervals.append(edgeval_current[2])
+    #
+    #     current_intervals.pop(0) # do this to remove the edge itself, e.g. [a, a] is no interval
+    #     #print(current_intervals)
+    #
+    #     for x, y in zip(current_intervals[0::], current_intervals[1::]):
+    #         intervals_g1.append(y-x)
+    #     #print(intervals)
+    #
+    #     print("G1 len(intervals): " + str(len(intervals_g1)))
     ####################################################################
 
 
     #compute probability density for G2
     ####################################################################
-    intervals_g2 = []
-    
-    for edgeval in G2.nn.edges:
-        current_intervals = []
-        for edgeval_current in G2.pp.tedges[::2]:
-            if edgeval[0] == edgeval_current[0] and edgeval[1] == edgeval_current[1]:
-                current_intervals.append(edgeval_current[2])
-        
-        current_intervals.pop(0) # do this to remove the edge itself, e.g. [a, a] is no interval
-        #print(current_intervals)
-
-        for x, y in zip(current_intervals[0::], current_intervals[1::]): 
-            intervals_g2.append(y-x) 
-        #print(intervals)
-
-        print("G2 len(intervals): " + str(len(intervals_g2)))
+    G2.edge_intervals()
+    # intervals_g2 = []
+    #
+    # for edgeval in G2.nn.edges:
+    #     current_intervals = []
+    #     for edgeval_current in G2.pp.tedges[::2]:
+    #         if edgeval[0] == edgeval_current[0] and edgeval[1] == edgeval_current[1]:
+    #             current_intervals.append(edgeval_current[2])
+    #
+    #     current_intervals.pop(0) # do this to remove the edge itself, e.g. [a, a] is no interval
+    #     #print(current_intervals)
+    #
+    #     for x, y in zip(current_intervals[0::], current_intervals[1::]):
+    #         intervals_g2.append(y-x)
+    #     #print(intervals)
+    #
+    #     print("G2 len(intervals): " + str(len(intervals_g2)))
     ####################################################################
 
 
     #compute probability density for G3
     ####################################################################
-    intervals_g3 = []
-    
-    for edgeval in G3.nn.edges:
-        current_intervals = []
-        for edgeval_current in G3.pp.tedges[::2]:
-            if edgeval[0] == edgeval_current[0] and edgeval[1] == edgeval_current[1]:
-                current_intervals.append(edgeval_current[2])
-        
-        current_intervals.pop(0) # do this to remove the edge itself, e.g. [a, a] is no interval
-        #print(current_intervals)
-
-        for x, y in zip(current_intervals[0::], current_intervals[1::]): 
-            intervals_g3.append(y-x) 
-        #print(intervals)
-
-        print("G3 len(intervals): " + str(len(intervals_g3)))
+    G3.edge_intervals()
+    # intervals_g3 = []
+    #
+    # for edgeval in G3.nn.edges:
+    #     current_intervals = []
+    #     for edgeval_current in G3.pp.tedges[::2]:
+    #         if edgeval[0] == edgeval_current[0] and edgeval[1] == edgeval_current[1]:
+    #             current_intervals.append(edgeval_current[2])
+    #
+    #     current_intervals.pop(0) # do this to remove the edge itself, e.g. [a, a] is no interval
+    #     #print(current_intervals)
+    #
+    #     for x, y in zip(current_intervals[0::], current_intervals[1::]):
+    #         intervals_g3.append(y-x)
+    #     #print(intervals)
+    #
+    #     print("G3 len(intervals): " + str(len(intervals_g3)))
     ####################################################################
 
-    number_of_bins_for_hist = 2000 #number of bins in graphs
+    # with open('graph_data.pkl',"wb") as graph_data:
+    #     graphs = [G1.intervals, G2.intervals, G3.intervals]
+    #     pickle.dump(graphs, graph_data)
+    # with open('graph_data.pkl',"rb") as graph_data:
+    #     graphs = pickle.load(graph_data)
+    #     intervals1 = graphs[0]
+    #     intervals2=graphs[1]
+    #     intervals3 = graphs[2]
+
+    number_of_bins_for_hist = 1000 #number of bins in graphs
 
     #plot probability density for G1
-    f1 = plt.figure(1)
-    n, bins, patches = plt.hist(intervals_g1, bins=number_of_bins_for_hist,density=True)
-    plt.xlabel("Values")
+    #f1 = plt.figure(1)
+    n1, x1, _ = plt.hist(G1.intervals, bins=number_of_bins_for_hist,density=False, color='r', label="G1", alpha=0.3)
+    plt.xlabel("Arrival intervals")
     plt.ylabel("Frequency")
-    plt.title("G1 - Graph data")
-    f1.show()
+    plt.title("Arrival interval histogram")
+    #f1.show()
 
     #plot probability density for G2
-    f2 = plt.figure(2)
-    n, bins, patches = plt.hist(intervals_g2, bins=number_of_bins_for_hist,density=True)
-    plt.xlabel("Values")
-    plt.ylabel("Frequency")
-    plt.title("G2 - Graph 2")
-    f2.show()
+    #f2 = plt.figure(2)
+    n2, x2, _ = plt.hist(G2.intervals, bins=number_of_bins_for_hist,density=False, color='g', label="G2", alpha=0.3)
+    #plt.xlabel("Values")
+    #plt.ylabel("Frequency")
+    #plt.title("G2 - Graph 2")
+    #f2.show()
 
     #plot probability density for G3
-    f3 = plt.figure(3)
-    n, bins, patches = plt.hist(intervals_g3, bins=number_of_bins_for_hist,density=True)
-    plt.xlabel("Values")
-    plt.ylabel("Frequency")
-    plt.title("G3 - Graph 3")
-    f3.show()
+    #f3 = plt.figure(3)
+    n3, x3, _ = plt.hist(G3.intervals, bins=number_of_bins_for_hist,density=False, color='b', label="G3", alpha=0.3)
+    #plt.xlabel("Values")
+    #plt.ylabel("Frequency")
+    #plt.title("G3 - Graph 3")
+    #f3.show()
 
+    # bin_centers = 0.5 * (x1[1:] + x1[:-1])
+    # plt.plot(bin_centers, n1, color='r', alpha = 0.5, linestyle="", marker=',')
+    # bin_centers = 0.5 * (x2[1:] + x2[:-1])
+    # plt.plot(bin_centers, n2, color='g', alpha = 0.5, linestyle="", marker=',')
+    # bin_centers = 0.5 * (x3[1:] + x3[:-1])
+    # plt.plot(bin_centers, n3, color='b', alpha = 0.5, linestyle="", marker='o', s=1 )
+
+    #plt.ylim(0, 10000)
+    plt.yscale('log')
+    plt.legend()
     plt.show()
